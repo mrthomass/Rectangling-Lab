@@ -1,0 +1,48 @@
+---
+title: "Rectangling Lab"
+author: "Thomas Scartz"
+output: officedown::rdocx_document
+---
+
+```{r setup, include = FALSE, message = FALSE, warning = FALSE}
+library(rvest)
+library(listviewer)
+library(tidyverse)
+library(repurrrsive)
+```
+
+__(1)__
+
+__(a)__ Explain or describe nested lists.
+
+Nested lists are lists that are considered elements to another list. They are said to be nested since they are inside or nested in another list. Nested lists help individuals organize the data they store within them, so that extracting it is simple. However there are special techniques to access data from a nested lists which make extracting data from them less straightforward than a standard data frame.
+
+__(b)__ Open and explore data for Git Hub repos by running the following code `gh_repo`. Comment on the structure and arrangement of the data.
+```{r one_b, eval = FALSE, include = FALSE}
+gh_repos
+```
+
+This data is very unorganized, there appear to be multiple nested lists but viewing them and differentiating them is next to impossible. the structure is all one directional down there are no columns like in a data frame which makes analysis difficult.
+
+__(c)__ In two or three sentences, explain what happens to the data when you run the code;  `repos <- tibble(repo = gh_repos)`
+```{r one_c, eval = FALSE, include = FALSE}
+tibble(repo = gh_repos)
+```
+
+When I run this code I get a tibble containing 6 rows, each row has a list containing either 30 or 26 in one rows case items. This suggests that there are nested lists within the data `gh_repos`.
+
+__(d)__ Describe the data representation when the listserver tool is applied. And go into detail explaining why we have a nested List configuration. What do the numbers 30 and 68 represent?
+```{r one_d, eval = FALSE,include = FALSE}
+listviewer::jsonedit(gh_repos)
+```
+
+The data representation with the listviewer tool opens a viewer panel where you can view the initial list of six items inside gh_repos. The data is all represented in its individual list using the listviewer tool, and it requires the user to click on individual lists to see what it contains. We have a nested list configuration here to show each user first and then each users individual github repositories. Inside each of the suspected repositories is data from the repository. The number 30 is from the array of [6] items is the number of elements inside the first list, in this case it supposedly means the number of github repositories for each user. the number 68 from inside each of the [6] users is the number of elements found within each individual github repository, this is merely another list of items corresponding to each repository.
+
+__(e)__ Use and show R unnesting code to produce the tibble below.
+```{r one_e, message = FALSE, warning = FALSE}
+x <- tibble(repo = gh_repos) %>% 
+  unnest_longer(repo) %>% 
+  unnest_wider(repo)
+head(x)
+```
+
